@@ -1,9 +1,28 @@
-  setwd('~/hacks/tap')
+  setwd('~/code/github/tap/membership/data')
+  
+  ebpast.file = "eventbrite_attendance.csv"
+  ebmonth.file = "attendance-jan14.csv"
+  mc.file = "subscribers-jan14.csv"
+  
+  #mc.data = read.csv("mailchimp_members.csv", header=T)
+  #eb.data = read.csv("eventbrite_attendance.csv", header=T)
   
   
-  mc.data = read.csv("mailchimp_members.csv", header=T)
-  eb.data = read.csv("eventbrite_attendance.csv", header=T)
+  # rbind eventbrite data
+  # juse use this month's mailchimp data
+  require(plyr)
+  ebpast.data = read.csv(ebpast.file, header=T)
+  ebmonth.data = read.csv(ebmonth.file, header=T)
   
+  # set row names to be union of both datasets
+  ## NOTE: note necessary when ebmonth.data is subset of ebpast.data
+  #eb.data = data.frame()
+  #eb.data = merge(ebpast.data[1,], ebmonth.data[1,], by.x = "Email", by.y = "Email", all=T)
+  #eb.data2 = rbind.fill(eb.data, ebmonth.data)
+  
+  eb.data = rbind.fill(ebpast.data, ebmonth.data)
+  mc.data = read.csv(mc.file, header=T)
+
   data = merge(mc.data, eb.data, by.x = "Email.Address", by.y = "Email", all=T)
   
   emails = unique(data$Email)
