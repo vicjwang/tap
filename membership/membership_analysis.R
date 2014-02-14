@@ -41,6 +41,11 @@
   eventMap = lapply(emails, findAttendedEvents)
   names(eventMap) = emails
   
+  # events: event name, date
+  events = unique(eb.data[,c(1,9)])
+  
+  # events to attendees
+  
   getMonthsAgoDateFrom = function(date, m) {
     date - 30.5*m
   }
@@ -50,10 +55,16 @@
     return (eventDate > startDate && eventDate < endDate) 
   }
   
+  eventsInDateRange = function(startDate, endDate) {
+    as.character(events[sapply(events$Date.Attending, function(event) {
+      isEventInDateRange(event, startDate, endDate)
+    }), "Event.Name"])
+  }
+  
   numberAttendedEventsInDateRange = function(email, startDate, endDate) {
     # for person, find all their events
     events = eventMap[[email]]
-    if (is.null(events) | nrow(events) == 0 | length(events) == 0){
+    if (is.null(events) | is.na(events) | nrow(events) == 0 | length(events) == 0){
       return(0)
     }
     # for each event, see if it falls within date range. add to counter
@@ -66,6 +77,29 @@
     return(n)
   }
 
+  getAllAttendeesAtEvent = function(eventName) {
+    unique(eb.data[eb.data["Event.Name"] == eventName, "Email"])
+  }
+  
+  getAttendeesBreakdownForDateRange = function(startDate, endDate) {
+    eventsInRange = as.list(eventsInDateRange(startDate,endDate))
+    emails = unlist(lapply(eventsInRange, getAllAttendeesAtEvent))
+    emails = unique(emails[complete.cases(emails)])
+    ret = sapply(emails, function(email) {
+      numberAttendedEventsInDateRange(email, start, janEnd)
+    })
+    #summary(ret)
+    #hist(ret, breaks=-1:30, labels=T, ylim=c(0,60))
+    firsttimers = length(ret[ret==1])
+    secondtimers = length(ret[ret==2])
+    oldtimers = length(ret[ret>=3])
+    print(c(firsttimers, secondtimers, oldtimers))
+    barplot(c(firsttimers, secondtimers, oldtimers), labels=T)
+    return(ret)
+  }
+  
+  a = getAttendeesBreakdownForDateRange(janStart, janEnd)
+  
   # calculate "membership score" = 1 / R * e / E
   
   getDaysSinceLastEvent = function(email) {
@@ -109,6 +143,11 @@
   halfYearAgo = getMonthsAgoDateFrom( Sys.Date(), 6)
   yearAgo = getMonthsAgoDateFrom( Sys.Date(), 12)
   today = Sys.Date()
+  janStart = as.Date("2014/01/01")
+  janEnd = as.Date("2014/01/31")
+  start13 = as.Date("2013/01/01")
+  start = as.Date("2012/01/01")
+  
   
   numberAttendedEventsInDateRange("vjwang45@gmail.com", quarterAgo, today)
   
@@ -206,4 +245,8 @@
   # DEMO
   df[df$eventsInLastYear ==5, ]
   eventMap[['jamtonium@gmail.com']]
+  
+  
+  # membership metrics
+  # in last month, how many new attendees, 2nd timers, old timers
   
