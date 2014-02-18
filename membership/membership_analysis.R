@@ -56,9 +56,10 @@
   }
   
   eventsInDateRange = function(startDate, endDate) {
-    as.character(events[sapply(events$Date.Attending, function(event) {
+    ret = as.character(events[sapply(events$Date.Attending, function(event) {
       isEventInDateRange(event, startDate, endDate)
     }), "Event.Name"])
+    ret = ret[complete.cases(ret)]
   }
   
   numberAttendedEventsInDateRange = function(email, startDate, endDate) {
@@ -91,14 +92,44 @@
     #summary(ret)
     #hist(ret, breaks=-1:30, labels=T, ylim=c(0,60))
     firsttimers = length(ret[ret==1])
-    secondtimers = length(ret[ret==2])
     oldtimers = length(ret[ret>=3])
-    print(c(firsttimers, secondtimers, oldtimers))
-    barplot(c(firsttimers, secondtimers, oldtimers), labels=T)
+    bp = barplot(c(firsttimers, oldtimers), names.arg = c("first-timers", "old-timers"))
+    text(bp, labels=c(firsttimers, oldtimers), pos=2)
     return(ret)
   }
   
   a = getAttendeesBreakdownForDateRange(janStart, janEnd)
+  
+  # make member vs event matrix to get most similar users
+  # setup
+  memberEventsM = rbind(data.frame(), eventsInDateRange(start, janEnd))
+  names(memberEventsM) = eventsInDateRange(start, janEnd)
+
+  emptyRow = rep(0,length(names(memberEventsM)))
+  names(emptyRow) = names(memberEventsM)
+  memberEventsM = memberEventsM[-1,]
+  members = as.list(unique(data[,"Email.Address"]))
+  # iterate through members, get their attended events, mark 1 in matrix
+  mem = lapply(members, function(email) {
+    e = eventMap[[email]]
+    if (length(e) != length(emptyRow))
+      continue
+    row = rbind(data.frame(), emptyRow)
+    names(row) = names(emptyRow)
+    row[,as.character(unique(e$Event.Name))] = 1
+    row
+  })
+  names(mem) = unlist(members)
+  mem = mem[sapply(mem, function(r) {
+    return (length(r) == length(emptyRow))
+  })]
+  df = data.frame(matrix(unlist(mem), nrow=length(mem), byrow=T))
+  names(df) = names(emptyRow)
+  rownames(df) = names(mem)
+  
+  # heatmap
+  
+  
   
   # calculate "membership score" = 1 / R * e / E
   
