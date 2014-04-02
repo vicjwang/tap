@@ -34,8 +34,12 @@ def fit_to_slider(image, w=960, h=395):
     new_width = scale_width(width, height, h)
     image.thumbnail((new_width, h), Image.ANTIALIAS)
     newImage = Image.new("RGB", (w, h))
-    left = (w-image.size[0])/2
-    newImage.paste(image, (left, 0))
+    left = (w-width)/2
+    top = 0
+    if h > height:
+        print "resizing height"
+        top = (h-height)/2
+    newImage.paste(image, (left, top))
     return newImage
 
 
