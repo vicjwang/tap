@@ -31,14 +31,16 @@ def fit_to_slider(image, w=960, h=395):
     # make background black
     
     width, height = image.size
+    print "image size", image.size
     new_width = scale_width(width, height, h)
     image.thumbnail((new_width, h), Image.ANTIALIAS)
     newImage = Image.new("RGB", (w, h))
-    left = (w-width)/2
+    left = (w-new_width)/2
     top = 0
     if h > height:
-        print "resizing height"
+        print "image too small, resizing height"
         top = (h-height)/2
+        image.resize((new_width, h), Image.ANTIALIAS)
     newImage.paste(image, (left, top))
     return newImage
 
