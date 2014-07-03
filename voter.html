@@ -1,0 +1,38 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+
+<input class="frame-src" value="http://tacl.us7.list-manage.com/track/click?u=d1d9b955f1a7c863bbdfae03a&id=158d6239d6&e=9e06608b0a" size="50"/>
+<button>vote</button>
+<div class="iframe"></div>
+</body>
+<script>
+
+$(document).ready( function() {
+ $(".frame-src").click( function() {
+   $(this).select();
+ });
+ $("button").click( function() {
+    var self = $(this);
+    var frame = document.createElement("iframe");
+    frame.src = $(".frame-src").val();
+    frame.style.position = "relative";
+    frame.style.left = "0px";
+    $(".iframe").append(frame);
+    self.prop("disabled", true);
+    setTimeout(function() {
+      $(".iframe").html("");
+      self.prop("disabled", false);
+    }, 1500);
+   
+  });
+});
+</script>
+</html>
+
