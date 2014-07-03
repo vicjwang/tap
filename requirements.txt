@@ -1,0 +1,12 @@
+Cython==0.20
+PIL==1.1.7
+Pillow==2.3.0
+clang==3.4.dev192547
+eventbrite==0.45
+httplib2==0.8
+lxml==3.2.3
+numpy==1.6.2
+scikit-image==0.9.3
+scipy==0.12.0.dev-9622590
+six==1.6.1
+utils==0.5

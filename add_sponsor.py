@@ -58,6 +58,11 @@ def format_and_write(lines):
             f.write("\n".join([header, img, com, blurb, footer, "\n"]))
 
 
+def add_new_sponsor(lines, company, blurb):
+    lines.append((company, "FILL IMAGE HERE", '<a href="FILL ME IN" target="_blank"><strong>{0}</strong></a>'.format(company), blurb))
+    lines.sort(key= lambda x: x[0])
+    return lines
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("company", help="<company>")
@@ -67,10 +72,7 @@ if __name__ == "__main__":
     company = args.company
     blurb = args.blurb
     
-    lines = parse_sponsor_file(sponsor_file) 
-    lines.append((company, "FILL IMAGE HERE", '<a href="FILL ME IN" target="_blank"><strong>{0}</strong></a>'.format(company), blurb))
-    lines.sort(key= lambda x: x[0])
+    lines = parse_sponsor_file(sponsor_file)
+    lines = add_new_sponsor(lines, company, blurb)
     format_and_write(lines)
 
-
-    
