@@ -65,8 +65,8 @@ def add_new_sponsor(lines, company, blurb):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("company", help="<company>")
-    parser.add_argument("blurb", help="<blurb>")
+    parser.add_argument("Company", help="<company>")
+    parser.add_argument("'blurb'", help="<blurb>")
     args = parser.parse_args()
     
     company = args.company
