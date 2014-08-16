@@ -25,7 +25,7 @@ def parse_sponsor_file(sponsor_file):
             is_blurb = False
             continue
 
-        if "<h4>" in line:
+        if "img" in line:
             images.append(line)
         elif "<strong>" in line:
             name = bsoup(line).text
@@ -72,7 +72,8 @@ if __name__ == "__main__":
     company = args.company
     blurb = args.blurb
     
-    lines = parse_sponsor_file(sponsor_file)
-    lines = add_new_sponsor(lines, company, blurb)
+    lines = parse_sponsor_file(sponsor_file) 
+    lines.append((company, "<h4>FILL IMAGE HERE</h4>", '<a href="FILL ME IN" target="_blank"><strong>{0}</strong></a>'.format(company), blurb))
+    lines.sort(key= lambda x: x[0])
     format_and_write(lines)
 
