@@ -46,6 +46,7 @@ $(document).ready( function() {
             var result_html = $(".results tbody").html("");
             eb_client.event_list_attendees ( {'id': eb_id}, function( response ){
                 var attendees = response.attendees;
+                var newbies = 0;
                 // For each attendee, show facebook picture, how many past total events
                 $.each( attendees, function(index, attendee) {
                     var person = attendee.attendee;
@@ -56,9 +57,19 @@ $(document).ready( function() {
                     $.each( events, function(index, e) {
                         select_html.append("<option>" + e.title + " (" + e.start_date.substr(0,10) + ")</option>");
                     });
+
+                    if (events.length == 1) {
+                        newbies++;
+                    }
                     
                     var row = $("<tr></tr>").append("<td>"+name+"</td><td>"+events.length+"</td>").append($("<td></td>").append(select_html));
                     result_html.append(row);
+                });
+                // Display general event info.
+                $(".info").html("").prepend("<p>total registrations: " + attendees.length + "</p>").prepend("first timers: " + newbies);
+
+                eb_client.event_get({'id': eb_id}, function( response ) {
+                    $(".info").prepend("<h2>"+response.event.title+" on " + response.event.start_date.substr(0,10) + "</h2>");
                 });
             });
         });
@@ -69,6 +80,7 @@ $(document).ready( function() {
             var result_html = $(".results tbody").html("");
             eb_client.event_list_attendees( {'id': eb_id}, function( response ){
                 var attendees = response.attendees;
+                var newbies = 0;
                 $.each( attendees, function(index, attendee) {
                     var person = attendee.attendee;
                     var name = person.first_name + " " + person.last_name;
@@ -82,11 +94,21 @@ $(document).ready( function() {
                             count ++;
                         }
                     });
+                     if (events.length == 1) {
+                        newbies++;
+                    }
                     
                     var row = $("<tr></tr>").append("<td>"+name+"</td><td>"+count+"</td>").append($("<td></td>").append(select_html));
                     result_html.append(row);
  
                 });
+                // Display general event info.
+                $(".info").html("").prepend("<p>total registrations: " + attendees.length + "</p>").prepend("first timers: " + newbies);
+
+                eb_client.event_get({'id': eb_id}, function( response ) {
+                    $(".info").prepend("<h2>"+response.event.title+" on " + response.event.start_date.substr(0,10) + "</h2>");
+                });
+ 
             });
         });
     });
