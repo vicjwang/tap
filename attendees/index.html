@@ -2,15 +2,18 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <section>
+    <p>
+        code: <input class="code" type="text"/>
+        <button class="access">GO</button>
+        <div class="loading"></div>
+    </p>
+    <section class="display">
     <h3>Event Attendees</h3>
     <div class="event-attendees">
         <label>Enter eventbrite id here:</label>
         <input type="text" name="eb_id">
         <input type="submit" value="Submit">
     </div>
-    </section>
-    <section>
     <h3>Dinner Series</h3>
     <div class="dinner-series">
         <label>Enter eventbrite id:</label>
@@ -22,8 +25,7 @@
     <br>
     <hr>
     <br>
-    <section>
-    <div class="results">
+    <section class="results">
         <div class="info">
         </div>
     <table>
@@ -31,13 +33,12 @@
           <tr>
             <th>name</th>
             <th>events registered</th>
-            <th>events</th>
+            <th>past events</th>
           <tr>
         </thead>
         <tbody>
         </tbody>
     </table>
-    </div>
     </section>
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
