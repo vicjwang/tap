@@ -84,7 +84,7 @@ def fetch_all_pages(fn, *args, **kwargs):
     page_number += 1
     
     while page_number <= page_count:
-        payload = fn(*args, **kwargs)
+        payload = fn(*args, page=page_number, **kwargs)
         ret += payload[key]
         page_number += 1
     
@@ -117,8 +117,7 @@ def fetch_eventbrite_attendees():
             # Append event data to each attendee.
             for _row in rows:
                 row = _row + event
-                writerows.append(','.join(row))
-        f.write('\n'.join(writerows).encode('utf-8'))
+                f.write(','.join(row).encode('utf-8') + '\n')
 
 #e = fetch_all_ended_events_created_by_user(USER_ID)
 
